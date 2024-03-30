@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Context } from "telegraf";
-import { getLastTransactionDate, updateLatestTransactionDate } from "../../transaction-api/src/bank-scraper/lastTransactionState";
-import { serverUrl, transactionsSinceSuffix } from "../../transaction-api/src/server/routeNames";
-import { ApprovalStatus, MoneyTransaction } from "../../transaction-api/src/types";
+import { getLastTransactionDate, updateLatestTransactionDate } from "./lastTransactionState"; // TODO - needs to be linked to same file as scraper
+import { serverUrl, transactionsSinceSuffix } from "../../transaction-api/src/server/routeNames";  // TODO needs to be linked to backend routeNames
+import { ApprovalStatus, MoneyTransaction } from "../../transaction-api/src/types"; // TODO needs to be linked to backend types
 
 const sendReply = (ctx:Context, response:AxiosResponse<any, any>, time:number) => {
     const moneyTransactions:MoneyTransaction[] = response.data;
@@ -19,6 +19,7 @@ const sendReply = (ctx:Context, response:AxiosResponse<any, any>, time:number) =
         }
     });
 
+    console.log("Done");
     updateLatestTransactionDate(new Date(latestTransactionTime));
 }
 

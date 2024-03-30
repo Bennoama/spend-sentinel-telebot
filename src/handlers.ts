@@ -1,7 +1,7 @@
 import { Context } from "telegraf";
-import { reportNewTransactions, updateTransaction } from "./communication";
+import { reportNewTransactions } from "./communication";
 import { isAuthorized, getStringOfOptions, parseData, applyCommand } from "./utils";
-import { updateLatestTransactionDate } from "../../transaction-api/src/bank-scraper/lastTransactionState";
+import { updateLatestTransactionDate } from "./lastTransactionState";
 
 
 export const handleStart = (ctx:Context) => {
