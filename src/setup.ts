@@ -8,6 +8,6 @@ export const setUpBot = (bot: TelegramBot) => {
 
     bot.help(handleHelp);
 
-    bot.on('text', handleText) // deprecated - todo change to current signature
+    bot.on('text', handleText) // deprecated - todo change to current api
 }
 

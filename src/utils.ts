@@ -1,5 +1,5 @@
 import { Context } from "telegraf";
-import { allowedIDs } from "../environment";
+import { allowedIDs } from "./environment";
 import { updateTransaction } from "./communication";
 
 const statusesWords = [

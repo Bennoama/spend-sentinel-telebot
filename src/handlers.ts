@@ -1,13 +1,14 @@
 import { Context } from "telegraf";
 import { reportNewTransactions } from "./communication";
 import { isAuthorized, getStringOfOptions, parseData, applyCommand } from "./utils";
-import { updateLatestTransactionDate } from "./lastTransactionState";
 
 
 export const handleStart = (ctx:Context) => {
-    if (!isAuthorized(ctx)) {ctx.reply("Unauthorized"); return};
+    if (!isAuthorized(ctx)) {
+        ctx.reply("Unauthorized");
+        return
+    };
     const interval = 60 * 1000; // 60 seconds
-    updateLatestTransactionDate(new Date());
     reportNewTransactions(ctx)
     setInterval(() => { reportNewTransactions(ctx) }, interval);
 }

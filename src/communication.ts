@@ -1,29 +1,29 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Context } from "telegraf";
-import { getLastTransactionDate, updateLatestTransactionDate } from "./lastTransactionState"; // TODO - needs to be linked to same file as scraper
-import { serverUrl, transactionsSinceSuffix } from "../../transaction-api/src/shared/routeNames";  // TODO needs to be linked to backend routeNames
-import { ApprovalStatus, MoneyTransaction } from "../../transaction-api/src/shared/types"; // TODO needs to be linked to backend types
+// import { getLastTransactionDate, updateLatestTransactionDate } from "./lastTransactionState"; // TODO - needs to be linked to same file as scraper
+import { serverUrl, transactionsSinceSuffix } from "./shared/routeNames";  // TODO needs to be linked to backend routeNames
+import { ApprovalStatus, MoneyTransaction } from "./shared/types"; // TODO needs to be linked to backend types
 
-const sendReply = (ctx:Context, response:AxiosResponse<any, any>, time:number) => {
+const sendReply = (ctx:Context, response:AxiosResponse<any, any>) => {
     const moneyTransactions:MoneyTransaction[] = response.data;
     let i = 0;
-    let latestTransactionTime = time;
-    moneyTransactions.forEach((transaction:MoneyTransaction) => {
-        const transactionTime = (new Date(transaction.TransactionDate)).getTime();
-        latestTransactionTime = transactionTime > latestTransactionTime ? transactionTime : latestTransactionTime;
-        const data = getRelevantData(transaction);
+    moneyTransactions.forEach(async (transaction:MoneyTransaction) => {
+        const replyInformation = getReplyInformation(transaction);
         try {
-            ctx.reply("*New transaction found:*\n" + JSON.stringify(data, null, 1).replace(/[{"'}]/g,''));
+            transaction.ReportedToBot = true;
+            await axios.put(serverUrl, transaction);
+            if (moneyTransactions.length < 30)
+                ctx.reply("*New transaction found:*\n" + JSON.stringify(replyInformation, null, 1).replace(/[{"'}]/g,''));
         } catch (e:any) {
             console.log("Failed to send reply in chat, transaction number:", transaction.TransNum);
         }
     });
-
+    if (moneyTransactions.length >= 30)
+        ctx.reply(moneyTransactions.length.toString() + " new transactions found");
     console.log("Done");
-    updateLatestTransactionDate(new Date(latestTransactionTime));
 }
 
-const getRelevantData = (transaction: MoneyTransaction):Record<string, any> => {
+const getReplyInformation = (transaction: MoneyTransaction):Record<string, any> => {
     const data:Record<string, any> = {};
     const attributesToInclude = ['TransNum', 'Amount', 'Currency', 'Description', 'TransactionDate', 'CardNumber'];
     const attributeNameInChat:Record<string,string> = {
@@ -75,12 +75,10 @@ export const updateTransaction = async (approvalStatus:ApprovalStatus, transacti
 }
 
 export const reportNewTransactions = async (ctx:Context) => {
-    const time = getLastTransactionDate().getTime();
     try {
-        const response = await axios.get(serverUrl + transactionsSinceSuffix, {
-            params: {time : time}
+        const response = await axios.get(serverUrl + "notReportedToBot", {
         });
-        sendReply(ctx, response, time);
+        sendReply(ctx, response);
     } catch (e) {
         ctx.reply("Something went wrong!");
     };
