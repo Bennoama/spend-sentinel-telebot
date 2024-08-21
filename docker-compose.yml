@@ -2,3 +2,14 @@ version: "3.8"
 services:
   spend-sentinel-telebot:
     build: .
+    environment:
+      - serverUrl=http://transaction-api:8080/
+    env_file:
+      - ./secrets/botSecrets.txt
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external:
+      name: full-spend-sentinel_app-network

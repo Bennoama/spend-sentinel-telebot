@@ -1,12 +1,13 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { Context } from "telegraf";
 // import { getLastTransactionDate, updateLatestTransactionDate } from "./lastTransactionState"; // TODO - needs to be linked to same file as scraper
-import { serverUrl, transactionsSinceSuffix } from "./shared/routeNames";  // TODO needs to be linked to backend routeNames
+import { serverUrl } from "./environment";
 import { ApprovalStatus, MoneyTransaction } from "./shared/types"; // TODO needs to be linked to backend types
 
 const sendReply = (ctx:Context, response:AxiosResponse<any, any>) => {
     const moneyTransactions:MoneyTransaction[] = response.data;
     let i = 0;
+    console.log(moneyTransactions);
     moneyTransactions.forEach(async (transaction:MoneyTransaction) => {
         const replyInformation = getReplyInformation(transaction);
         try {

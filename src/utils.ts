@@ -3,7 +3,7 @@ import { allowedIDs } from "./environment";
 import { updateTransaction } from "./communication";
 
 const statusesWords = [
-    ['decline', 'dec', 'סרב', 'לא', 'מסורב', 'סירוב', 'x', 'בסדר', 'd'], // decline - status value is 0
+    ['decline', 'dec', 'סרב', 'לא', 'מסורב', 'סירוב', 'x', 'd'], // decline - status value is 0
     ['check', 'chk', 'בדוק', 'אולי', 'בבדיקה', 'בדיקה', 'c'], // unspecified - status value is 1
     ["approve", "app", "אשר", 'כן','מאושר', 'אישור', 'v', 'ok', 'a'], // approve - status value is 2
 ]
@@ -38,7 +38,7 @@ export const parseData = (msg:string): string[] => {
 
 export const isAuthorized = (ctx:Context):boolean => {
     if (undefined === ctx.from) return false;
-    return (allowedIDs.includes(ctx.from.id));
+    return (allowedIDs.includes(ctx.from.id.toString()));
 };
 
 
