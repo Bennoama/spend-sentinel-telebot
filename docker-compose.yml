@@ -3,7 +3,7 @@ services:
   spend-sentinel-telebot:
     build: .
     environment:
-      - serverUrl=http://transaction-api:8080/
+      - TRANSACTION_API_URL=http://transaction-api:8080/
     env_file:
       - ./secrets/botSecrets.env
     networks:
@@ -12,4 +12,4 @@ services:
 networks:
   app-network:
     external:
-      name: full-spend-sentinel_app-network
+      name: spend-sentinel-app-network
