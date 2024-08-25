@@ -1,6 +1,6 @@
 import { Telegraf } from 'telegraf';
-import { allowedIDs, botToken } from './environment';
-import { setUpBot } from './setup';
+import { botToken } from './services/environment';
+import { setUpBot } from './services/setup';
 const bot = new Telegraf(botToken);
 
 setUpBot(bot);
