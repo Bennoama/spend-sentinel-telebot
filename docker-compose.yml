@@ -4,6 +4,7 @@ services:
     build: .
     environment:
       - TRANSACTION_API_URL=http://transaction-api:8080/
+      - BOT_SAMPLE_INTERVAL=60 #seconds
     env_file:
       - ./secrets/botSecrets.env
     networks:
