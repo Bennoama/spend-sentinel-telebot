@@ -40,7 +40,8 @@ const getReplyInformation = (transaction: MoneyTransaction):Record<string, strin
 
 const getDataOfTransaction = async (transactionNumber:string): Promise<MoneyTransaction | null | undefined> => {
     try {
-        const getResponse: AxiosResponse = await axios.get(transactionApiUrl + "/" + transactionNumber);
+        console.log(transactionApiUrl + "/" + transactionNumber);
+        const getResponse: AxiosResponse = await axios.get(transactionApiUrl + transactionNumber);
         return getResponse.data;
     } catch (e) {
         if (axios.isAxiosError(e)) {
@@ -54,8 +55,6 @@ const getDataOfTransaction = async (transactionNumber:string): Promise<MoneyTran
 
 export const updateTransaction = async (approvalStatus:ApprovalStatus, transactionNumber:string):Promise<string> => {
     const statusWord = ['Declined', 'Unspecified', 'Approved'];
-
-
     const data:MoneyTransaction | null | undefined = await getDataOfTransaction(transactionNumber);
     if (null === data) return "Transaction " + transactionNumber + " is not the transaction you are looking for";
     if (undefined === data) return "Fetching data failed " + transactionNumber + "\nTalk to Maor or something idk lol";
